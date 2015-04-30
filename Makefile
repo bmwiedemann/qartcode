@@ -1,4 +1,7 @@
-nice.svg: src.svg roundcorners.pl
+nice.svg: rounded.svg overlaypic.pl
+	./overlaypic.pl $< > $@
+
+rounded.svg: src.svg roundcorners.pl
 	./roundcorners.pl $< > $@
 
 src.svg:

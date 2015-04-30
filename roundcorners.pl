@@ -4,7 +4,7 @@ use Data::Dump qw(dump);
 
 my $strokewidth = 1/16 + 1/4; # round number, large enough to cover a corner
 my $cornerdistance = 0.5;
-my $curviness = 0.2;
+my $curviness = 0.15;
 my $overlap = 0.05;
 
 my @data=();
