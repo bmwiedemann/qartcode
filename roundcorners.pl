@@ -4,6 +4,7 @@ use Data::Dump qw(dump);
 
 my $strokewidth = 1/16 + 1/4; # round number, large enough to cover a corner
 my $cornerdistance = 0.5;
+my $curviness = 0.2;
 
 my @data=();
 my ($sizex, $sizey);
@@ -58,12 +59,13 @@ sub curve(%)
 	my $offs = $cornerdistance + $swh;
 	my @f = ($dir->[0], -$dir->[1]);
 	my @curvestart = ($params->{x} + $f[0]*$cornerdistance, $params->{y} + $f[1]*$swh);
-	my @offset = (-$f[0]*$cornerdistance, -$f[1]*$swh);
-    my @offs=(-$f[0]*$offs, -$f[1]*$offs);
+	my @center = (-$f[0]*$cornerdistance, -$f[1]*$swh);
+	for my $i (0..1) { $center[$i] -= $dir->[$i]*$curviness }
+	my @offs=(-$f[0]*$offs, -$f[1]*$offs);
 	my $c = svgcolor($params->{color});
 # smooth black top-left to bottom-right
-#  <path style="stroke:#000000;stroke-width:0.3125px;stroke-opacity:1" d="m 14.50,10.16 c -0.5,-0.16 -0.66,-0.66 -0.66,-0.66" />
-	output(qq'<path style="stroke:$c;stroke-width:${strokewidth}px;stroke-opacity:1" d="m $curvestart[0],$curvestart[1] c $offset[0],$offset[1] $offs[0],$offs[1] $offs[0],$offs[1]" />');
+#  <path style="stroke:#000000;fill:none;stroke-width:0.3125px;stroke-opacity:1" d="m 14.50,10.16 c -0.5,-0.16 -0.66,-0.66 -0.66,-0.66" />
+	output(qq'<path style="fill:none;stroke:$c;stroke-width:${strokewidth}px;stroke-opacity:1" d="m $curvestart[0],$curvestart[1] c $center[0],$center[1] $offs[0],$offs[1] $offs[0],$offs[1]" />');
 }
 
 # maps bits to function
@@ -76,7 +78,7 @@ for my $i (0..3) {
 foreach my $y (0..($sizey-2)) {
 	foreach my $x (0..($sizex-2)) {
 		# collect 2x2 bits and look it up in adjustmap
-		my $bits = 
+		my $bits =
 			($data[$y][$x+1] << 3) +
 			($data[$y][$x]   << 2) +
 			($data[$y+1][$x] << 1) +
