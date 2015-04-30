@@ -5,6 +5,7 @@ use Data::Dump qw(dump);
 my $strokewidth = 1/16 + 1/4; # round number, large enough to cover a corner
 my $cornerdistance = 0.5;
 my $curviness = 0.2;
+my $overlap = 0.05;
 
 my @data=();
 my ($sizex, $sizey);
@@ -21,6 +22,17 @@ while(<>) {
 	if (m'<rect x="(\d+)" y="(\d+)" width="1" height="1" fill="#000000" />') {
 		my ($x, $y) = ($1, $2);
 		$data[$y][$x]=0; # black
+		my $newsize = 1+$overlap;
+		if($x && $data[$y][$x-1]==0) {
+			s/(width)="1"/$1="$newsize"/g;
+			my $newx = $x-$overlap;
+			s/(x)="\d+"/$1="$newx"/;
+		}
+		if($y && $data[$y-1][$x]==0) {
+			s/(height)="1"/$1="$newsize"/g;
+			$y-=$overlap;
+			s/(y)="\d+"/$1="$y"/;
+		}
 	}
 	last if m{</svg>};
 	print;
