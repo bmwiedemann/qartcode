@@ -26,6 +26,8 @@ close $ovlfd;
 my $dx=-7.0;
 my $dy=7.0;
 my $scale=0.099;
-print qq'<g transform="translate($dx,$dy)"><g transform="scale($scale)" style="opacity:0.7">', join "\n", @ovl, "</g></g>";
+my $angle=0;
+my $mid = 14; # size/2
+print qq'<g transform="rotate($angle, $mid, $mid) translate($dx,$dy) scale($scale)" style="opacity:0.7">', join "\n", @ovl, "</g>";
 
 print "</svg>\n";
