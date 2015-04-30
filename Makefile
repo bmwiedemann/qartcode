@@ -1,5 +1,5 @@
 nice.svg: rounded.svg overlaypic.pl
-	./overlaypic.pl $< > $@
+	./overlaypic.pl openSUSE_geeko-color.svg $< > $@
 
 rounded.svg: src.svg roundcorners.pl
 	./roundcorners.pl $< > $@
