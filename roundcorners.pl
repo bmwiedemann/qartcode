@@ -2,6 +2,7 @@
 use strict;
 use Data::Dump qw(dump);
 
+srand(1);
 our $strokewidth = 1/8 + 1/4; # round number, large enough to cover a corner
 our $cornerdistance = 0.5;
 our $curviness = 0.15;
@@ -85,6 +86,7 @@ sub doublecurve(%)
 	my $params = shift;
 	my %params = %$params;
 	local $curviness=0;
+	if(rand()<0.5) {$params{dir}^=1; $params{color}^=1}
 	curve(\%params);
 	$params{dir} = ($params{dir} + 2) % 4; # opposite direction
 	curve(\%params);
