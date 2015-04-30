@@ -68,8 +68,21 @@ sub curve(%)
 	output(qq'<path style="fill:none;stroke:$c;stroke-width:${strokewidth}px;stroke-opacity:1" d="m $curvestart[0],$curvestart[1] c $center[0],$center[1] $offs[0],$offs[1] $offs[0],$offs[1]" />');
 }
 
+sub doublecurve(%)
+{
+	my $params = shift;
+	my %params = %$params;
+	curve(\%params);
+	$params{dir} = ($params{dir} + 2) % 4; # opposite direction
+	curve(\%params);
+}
+
 # maps bits to function
-my %adjustmap=();#(1=>{function=>\&curve, params=>{dir=>0, color=>1}});
+my %adjustmap=(
+	#(1=>{function=>\&curve, params=>{dir=>0, color=>1}});
+	5=>{function=>\&doublecurve, params=>{dir=>0, color=>0}},
+	10=>{function=>\&doublecurve, params=>{dir=>0, color=>1}},
+);
 for my $i (0..3) {
 	$adjustmap{1<<$i} = {function=>\&curve, params=>{dir=>$i, color=>0}};
 	$adjustmap{not4(1<<$i)} = {function=>\&curve, params=>{dir=>$i, color=>1}};
