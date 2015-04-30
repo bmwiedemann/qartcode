@@ -2,9 +2,9 @@
 use strict;
 use Data::Dump qw(dump);
 
-my $strokewidth = 1/16 + 1/4; # round number, large enough to cover a corner
-my $cornerdistance = 0.5;
-my $curviness = 0.15;
+our $strokewidth = 1/8 + 1/4; # round number, large enough to cover a corner
+our $cornerdistance = 0.5;
+our $curviness = 0.15;
 my $overlap = 0.05;
 
 my @data=();
@@ -84,6 +84,7 @@ sub doublecurve(%)
 {
 	my $params = shift;
 	my %params = %$params;
+	local $curviness=0;
 	curve(\%params);
 	$params{dir} = ($params{dir} + 2) % 4; # opposite direction
 	curve(\%params);
