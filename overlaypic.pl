@@ -32,6 +32,9 @@ sub writeoverlaid(%)
 	close $fd;
 }
 
+my $scale = 6;
+$basepic =~ s{<svg width="([0-9.]+)cm" height="([0-9.]+)cm"}{'<svg width="'.($1*$scale).'cm" height="'.($2*$scale).'cm" shape-rendering="crispEdges"'}e; # disable anti-aliasing (but not for inkscape SVG export)
+
 my %params=(
 		filename=>"/dev/shm/test.svg",
 		dx=>-7.0,
@@ -48,13 +51,16 @@ sub optimize(%)
 #convert -density 450 nice.svg /dev/shm/nice.ppm
 # using PerlMagick to read svg, measure darkened+brightened pixels
 # use gaussian error method
+	system(qq{( cd /dev/shm/ ; time gimp -inbdf '(python-fu-svgtopng RUN-NONINTERACTIVE "*.svg" "/dev/shm/")' -b '(gimp-quit 0)' )}); # slow part
 	use Image::Magick;
 	my $img = new Image::Magick;
-	$img->Set(density=>400, antialias=>0);
-	$img->Read($params->{filename}); # slow part
+	$img->Set(density=>400, antialias=>'false');
+	$img->Read("/dev/shm/test.png");
 	$img->Write("/dev/shm/test.ppm");
 }
 optimize(\%params);
 
 $params{filename}="/dev/stdout";
 writeoverlaid(\%params);
+
+#inkscape --export-png=/dev/shm/test.png --export-dpi=200 --export-background-opacity=0 --without-gui /dev/shm/test.svg
