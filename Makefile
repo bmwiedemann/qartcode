@@ -7,4 +7,5 @@ rounded.svg: src.svg roundcorners.pl
 src.svg:
 	qrencode -m 1 -l L -t SVG https://conference.opensuse.org > $@
 
-
+clean:
+	rm -f src.svg rounded.svg nice.svg
