@@ -12,6 +12,7 @@ my $print;
 my @ovl=();
 my $line;
 while(<$ovlfd>) {
+	if(m{<ellipse}) {$print=1}
 	if(m{<path}) {$print=1}
 	if(m{</g>}) {$print=0}
 	s/inkscape:connector-curvature="0"//;
