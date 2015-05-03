@@ -3,9 +3,10 @@ use strict;
 use Data::Dump qw(dump);
 
 srand(1);
-our $strokewidth = 1/8 + 1/4; # round number, large enough to cover a corner
-our $cornerdistance = 0.5;
-our $curviness = 0.15;
+our $cornerdistance = 0.45;
+our $strokewidth = $cornerdistance * (1/2 + 1/4); # large enough to cover a corner
+our $curviness = 0.30;
+our $doublecurvecurviness = 0.20;
 my $overlap = 0.05;
 
 my @data=();
@@ -73,7 +74,7 @@ sub curve(%)
 	my @f = ($dir->[0], -$dir->[1]);
 	my @curvestart = ($params->{x} + $f[0]*$cornerdistance, $params->{y} + $f[1]*$swh);
 	my @center = (-$f[0]*$cornerdistance, -$f[1]*$swh);
-	for my $i (0..1) { $center[$i] -= $dir->[$i]*$curviness }
+	for my $i (0..1) { $center[$i] -= $dir->[$i]*$curviness*$cornerdistance }
 	my @offs=(-$f[0]*$offs, -$f[1]*$offs);
 	my $c = svgcolor($params->{color});
 # smooth black top-left to bottom-right
@@ -85,7 +86,7 @@ sub doublecurve(%)
 {
 	my $params = shift;
 	my %params = %$params;
-	local $curviness=0;
+	local $curviness = $doublecurvecurviness;
 	if(rand()<0.5) {$params{dir}^=1; $params{color}^=1}
 	curve(\%params);
 	$params{dir} = ($params{dir} + 2) % 4; # opposite direction
