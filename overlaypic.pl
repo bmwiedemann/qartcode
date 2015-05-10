@@ -35,7 +35,7 @@ sub writeoverlaid(%)
 
 my $scale = 6;
 $basepic =~ s{<svg width="([0-9.]+)cm" height="([0-9.]+)cm"}{'<svg width="'.($1*$scale).'cm" height="'.($2*$scale).'cm"'}e;
-$basepic =~ s{<svg}{$& shape-rendering="crispEdges"}; # disable anti-aliasing (but not for inkscape SVG export)
+#$basepic =~ s{<svg}{$& shape-rendering="crispEdges"}; # disable anti-aliasing (but not for inkscape SVG export)
 
 my %params=(
 		filename=>"/dev/shm/test.svg",
@@ -60,7 +60,7 @@ sub optimize(%)
 	$img->Read("/dev/shm/test.png");
 	$img->Write("/dev/shm/test.ppm");
 }
-optimize(\%params);
+#optimize(\%params);
 
 $params{filename}="/dev/stdout";
 writeoverlaid(\%params);
